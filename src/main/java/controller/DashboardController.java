@@ -13,11 +13,13 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 // Implement the Connectable interface
@@ -74,6 +76,8 @@ public class DashboardController implements NavController.Connectable {
         if (connection != null) {
             try {
                 System.out.println("Connection valid? " + !connection.isClosed());
+                // Check if monthly_revenue table has data, if not populate with sample data
+                checkAndPopulateRevenueData();
                 // Only load data after connection is set
                 loadDashboardData();
             } catch (SQLException e) {
@@ -97,10 +101,7 @@ public class DashboardController implements NavController.Connectable {
             isPrivateColumn.setCellValueFactory(cellData -> cellData.getValue().isPrivateProperty());
         }
 
-        // Don't call loadDashboardData() here anymore
-        // It will be called by setConnection()
-
-        // Only set up refresh button if it exists
+        // Add refresh button handler if it exists
         if (refreshButton != null) {
             refreshButton.setOnAction(event -> loadDashboardData());
         }
@@ -244,16 +245,153 @@ public class DashboardController implements NavController.Connectable {
         }
     }
 
+    /**
+     * Loads chart data from the monthly_revenue table in the database
+     */
     private void loadChartData() {
         profitChart.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Profit");
-        series.getData().add(new XYChart.Data<>("Jan", 2500));
-        series.getData().add(new XYChart.Data<>("Feb", 3000));
-        series.getData().add(new XYChart.Data<>("Mar", 2800));
-        series.getData().add(new XYChart.Data<>("Apr", 3200));
-        series.getData().add(new XYChart.Data<>("May", 2900));
+        series.setName("Monthly Profit");
+
+        try {
+            // Query to get monthly revenue data ordered by year and month
+            String query = "SELECT month, year, revenue FROM monthly_revenue " +
+                    "ORDER BY year, FIELD(month, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')";
+
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String month = rs.getString("month");
+                int year = rs.getInt("year");
+                double revenue = rs.getDouble("revenue");
+
+                // Format as "Month Year" for x-axis
+                String label = month + " " + year;
+                series.getData().add(new XYChart.Data<>(label, revenue));
+            }
+
+            // If no data was found, show a message
+            if (series.getData().isEmpty()) {
+                System.out.println("No revenue data found in the database");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error loading chart data: " + e.getMessage());
+            e.printStackTrace();
+
+            // Fall back to dummy data if there's an error
+            series.getData().add(new XYChart.Data<>("No Data", 0));
+        }
+
         profitChart.getData().add(series);
+
+        // Apply styling to the chart
+        profitChart.setCreateSymbols(true);
+        profitChart.setAnimated(true);
+    }
+
+    /**
+     * Checks if the monthly_revenue table has data. If not, populates it with sample data.
+     */
+    private void checkAndPopulateRevenueData() throws SQLException {
+        // Check if the table has data
+        String checkQuery = "SELECT COUNT(*) FROM monthly_revenue";
+        PreparedStatement checkStmt = connection.prepareStatement(checkQuery);
+        ResultSet checkRs = checkStmt.executeQuery();
+
+        if (checkRs.next() && checkRs.getInt(1) == 0) {
+            // Table is empty, populate with sample data
+            System.out.println("monthly_revenue table is empty. Populating with sample data...");
+
+            // Calculate revenue from payments table
+            populateRevenueFromPayments();
+        }
+    }
+
+    /**
+     * Populates the monthly_revenue table with data from the payments/paiements tables
+     */
+    private void populateRevenueFromPayments() throws SQLException {
+        // Clear existing data
+        connection.prepareStatement("DELETE FROM monthly_revenue").executeUpdate();
+
+        // A map to store aggregated revenue by month and year
+        Map<String, Double> monthlyRevenue = new HashMap<>();
+        int currentYear = LocalDate.now().getYear();
+
+        // First, aggregate data from the paiements table
+        String paiementsQuery = "SELECT MONTH(date_creation) as month, YEAR(date_creation) as year, SUM(montant) as revenue " +
+                "FROM paiements GROUP BY year, month";
+
+        try (PreparedStatement stmt = connection.prepareStatement(paiementsQuery);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int monthNum = rs.getInt("month");
+                int year = rs.getInt("year");
+                double revenue = rs.getDouble("revenue");
+
+                String monthName = Month.of(monthNum).getDisplayName(TextStyle.SHORT, Locale.US);
+                String key = monthName + "_" + year;
+
+                monthlyRevenue.put(key, monthlyRevenue.getOrDefault(key, 0.0) + revenue);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting revenue from paiements: " + e.getMessage());
+        }
+
+        // Then, add data from the payments table if it exists
+        String paymentsQuery = "SELECT MONTH(payment_date) as month, YEAR(payment_date) as year, SUM(amount) as revenue " +
+                "FROM payments GROUP BY year, month";
+
+        try (PreparedStatement stmt = connection.prepareStatement(paymentsQuery);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                int monthNum = rs.getInt("month");
+                int year = rs.getInt("year");
+                double revenue = rs.getDouble("revenue");
+
+                String monthName = Month.of(monthNum).getDisplayName(TextStyle.SHORT, Locale.US);
+                String key = monthName + "_" + year;
+
+                monthlyRevenue.put(key, monthlyRevenue.getOrDefault(key, 0.0) + revenue);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting revenue from payments: " + e.getMessage());
+        }
+
+        // If no data was collected from tables, add sample data for visualization
+        if (monthlyRevenue.isEmpty()) {
+            // Generate sample data for the current year
+            for (int month = 1; month <= Math.min(LocalDate.now().getMonthValue(), 12); month++) {
+                String monthName = Month.of(month).getDisplayName(TextStyle.SHORT, Locale.US);
+                String key = monthName + "_" + currentYear;
+
+                // Random revenue between 2000 and 4000
+                double revenue = 2000 + Math.random() * 2000;
+                monthlyRevenue.put(key, revenue);
+            }
+        }
+
+        // Now insert all collected data into the monthly_revenue table
+        String insertQuery = "INSERT INTO monthly_revenue (month, year, revenue) VALUES (?, ?, ?)";
+        PreparedStatement insertStmt = connection.prepareStatement(insertQuery);
+
+        for (Map.Entry<String, Double> entry : monthlyRevenue.entrySet()) {
+            String[] parts = entry.getKey().split("_");
+            String month = parts[0];
+            int year = Integer.parseInt(parts[1]);
+            double revenue = entry.getValue();
+
+            insertStmt.setString(1, month);
+            insertStmt.setInt(2, year);
+            insertStmt.setDouble(3, revenue);
+            insertStmt.executeUpdate();
+        }
+
+        System.out.println("Successfully populated monthly_revenue table with " + monthlyRevenue.size() + " records");
     }
 
     private void loadScheduleData() {
