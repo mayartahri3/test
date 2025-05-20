@@ -44,9 +44,13 @@
             <artifactId>charm-down-core</artifactId>
             <version>3.8.6</version>
         </dependency>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.1.2</version>
+        </dependency>
 
 
-        <!-- Gluon Charm for TextField -->
 
     </dependencies>
 

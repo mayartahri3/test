@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.effect.DropShadow?>
+
+<AnchorPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+          prefHeight="600.0" prefWidth="450.0" styleClass="signup-form" stylesheets="@logindesign.css"
+          style="-fx-background-color: #f5f5f5;"
+          xmlns="http://javafx.com/javafx/23.0.1"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="controller.SignupController">
+   <children>
+      <!-- White panel with drop shadow -->
+      <AnchorPane layoutX="25.0" layoutY="25.0" prefHeight="550.0" prefWidth="400.0" styleClass="signup-form" stylesheets="@logindesign.css">
+         <effect>
+            <DropShadow color="#00000033" height="10.0" radius="4.5" width="10.0" />
+         </effect>
+
+         <children>
+            <!-- Header with brand colors -->
+            <AnchorPane prefHeight="80.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(to right, #0288d1, #4fc3f7); -fx-background-radius: 8 8 0 0;">
+               <children>
+                  <Label layoutX="110.0" layoutY="25.0" text="Créer un compte" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+
+            <!-- Form Content -->
+            <VBox alignment="TOP_CENTER" layoutX="50.0" layoutY="100.0" prefHeight="435.0" prefWidth="300.0" spacing="12.0">
+               <children>
+                  <!-- App icon and name -->
+                  <Text fill="#0288d1" text="💪" textAlignment="CENTER">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
+                  <Text fill="#424242" text="GYM MANAGER" textAlignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Text>
+                  <Separator prefWidth="300.0" styleClass="separator" />
+
+                  <!-- Form fields -->
+                  <Label text="Nom complet" textFill="#424242" />
+                  <TextField fx:id="fullName" prefHeight="40.0" prefWidth="300.0" promptText="Entrez votre nom complet"
+                           styleClass="textfield" stylesheets="@logindesign.css" />
+
+                  <Label text="Email" textFill="#424242" />
+                  <TextField fx:id="email" prefHeight="40.0" prefWidth="300.0" promptText="Entrez votre adresse email"
+                           styleClass="textfield" stylesheets="@logindesign.css" />
+
+                  <Label text="Nom d'utilisateur" textFill="#424242" />
+                  <TextField fx:id="username" prefHeight="40.0" prefWidth="300.0" promptText="Choisissez un nom d'utilisateur"
+                           styleClass="textfield" stylesheets="@logindesign.css" />
+
+                  <Label text="Mot de passe" textFill="#424242" />
+                  <TextField fx:id="password" prefHeight="40.0" prefWidth="300.0" promptText="Entrez votre mot de passe"
+                           styleClass="textfield" stylesheets="@logindesign.css" />
+
+                  <Label text="Confirmez le mot de passe" textFill="#424242" />
+                  <TextField fx:id="confirmPassword" prefHeight="40.0" prefWidth="300.0" promptText="Confirmez votre mot de passe"
+                           styleClass="textfield" stylesheets="@logindesign.css" />
+
+                  <!-- Action buttons -->
+                  <Separator prefWidth="300.0" styleClass="separator" />
+
+                  <Button fx:id="signupBtn" prefHeight="40.0" prefWidth="300.0" styleClass="login-btn"
+                        stylesheets="@logindesign.css" text="CRÉER UN COMPTE" />
+
+                  <Button fx:id="cancelBtn" prefHeight="40.0" prefWidth="300.0" styleClass="cancel-btn"
+                        stylesheets="@logindesign.css" text="ANNULER" />
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

@@ -3,100 +3,135 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
+
+<Pane prefHeight="780.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
    <children>
-      <BorderPane prefHeight="566.0" prefWidth="893.0">
-         <top>
-            <VBox prefHeight="66.0" prefWidth="1000.0" style="-fx-background-color: #2c3e50; -fx-padding: 20;">
-               <children>
-                  <Label prefHeight="18.0" prefWidth="393.0" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" text="GYM MANAGEMENT DASHBOARD" />
-               </children>
-            </VBox>
-         </top>
-         <center>
-            <VBox spacing="20" style="-fx-padding: 20;">
-               <children>
-                  <GridPane alignment="CENTER" hgap="20" prefHeight="186.0" prefWidth="676.0" vgap="20">
-                     <columnConstraints>
-                        <ColumnConstraints percentWidth="33.33" />
-                        <ColumnConstraints percentWidth="33.33" />
-                        <ColumnConstraints percentWidth="33.33" />
-                     </columnConstraints>
+      <StackPane layoutX="20.0" layoutY="62.0" prefHeight="700.0" prefWidth="1250.0" style="-fx-background-color: #f5f5f5;">
+         <children>
+            <BorderPane prefHeight="664.0" prefWidth="1180.0">
+               <center>
+                  <VBox prefHeight="780.0" prefWidth="1200.0" spacing="20" style="-fx-padding: 20;">
                      <children>
-                        <VBox prefHeight="125.0" prefWidth="212.0" style="-fx-background-color: #DDA853; -fx-background-radius: 10; -fx-padding: 20;" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                           <children>
-                              <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="USERS THIS MONTH" />
-                              <Label fx:id="usersCountLabel" style="-fx-text-fill: white; -fx-font-size: 36;" text="0" />
-                           </children>
-                        </VBox>
-                        <VBox style="-fx-background-color: #BFBBA9; -fx-background-radius: 10; -fx-padding: 20;" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                           <children>
-                              <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="COACHES" />
-                              <Label fx:id="coachesLabel" style="-fx-text-fill: white; -fx-font-size: 36;" text="0" />
-                           </children>
-                        </VBox>
-                        <VBox style="-fx-background-color: #48A6A7; -fx-background-radius: 10; -fx-padding: 20;" GridPane.columnIndex="1">
-                           <children>
-                              <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="PAYMENTS" />
-                              <Label fx:id="paymentsLabel" style="-fx-text-fill: white; -fx-font-size: 36;" text="0" />
-                           </children>
-                        </VBox>
-                     </children>
-                     <rowConstraints>
-                        <RowConstraints />
-                     </rowConstraints>
-                  </GridPane>
-                  <LineChart fx:id="profitChart" legendVisible="false" prefHeight="342.0" prefWidth="676.0" style="-fx-background-color: #F2EFE7;" title="Monthly Profit Trend">
-                     <xAxis>
-                        <CategoryAxis label="Month" />
-                     </xAxis>
-                     <yAxis>
-                        <NumberAxis label="Profit ($)" />
-                     </yAxis>
-                  </LineChart>
-               </children>
-            </VBox>
-         </center>
-         <left>
-            <AnchorPane prefHeight="725.0" prefWidth="294.0" style="-fx-background-color: #27548A; -fx-border-color: white; -fx-border-radius: 20;" BorderPane.alignment="CENTER">
-               <children>
-                  <VBox layoutX="40.900001525878906" layoutY="330.8999938964844">
-                     <children>
-                        <GridPane prefHeight="211.0" prefWidth="212.0">
+                        <!-- Statistics cards -->
+                        <GridPane alignment="CENTER" hgap="20" prefHeight="186.0" prefWidth="900.0" vgap="20">
                            <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints percentWidth="33.33" />
+                              <ColumnConstraints percentWidth="31.0" />
+                              <ColumnConstraints percentWidth="35.66" />
                            </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
                            <children>
-                              <Button fx:id="paymentButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="212.0" text="payment" GridPane.rowIndex="3" />
-                              <Button fx:id="addCoachesButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="211.0" text="add coaches" GridPane.rowIndex="1" />
-                              <Button fx:id="addParticipantButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="211.0" text="add participant" GridPane.rowIndex="2" />
-                              <Button fx:id="dashboardButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="211.0" text="dashboard" />
+                              <!-- First stat card -->
+                              <VBox prefHeight="126.0" prefWidth="265.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                 <effect>
+                                    <DropShadow color="#00000022" height="10.0" radius="4.5" width="10.0" />
+                                 </effect>
+                                 <children>
+                                    <Text fill="#424242" text="USERS THIS MONTH">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Text>
+                                    <Label fx:id="usersCountLabel" style="-fx-text-fill: linear-gradient(to right, #0288d1, #4fc3f7); -fx-font-size: 36;" text="0" />
+                                 </children>
+                              </VBox>
+      
+                                          <!-- Second stat card -->
+                              <VBox prefHeight="126.0" prefWidth="250.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;" GridPane.columnIndex="1">
+                                 <effect>
+                                    <DropShadow color="#00000022" height="10.0" radius="4.5" width="10.0" />
+                                 </effect>
+                                 <children>
+                                    <Text fill="#424242" text="PAYMENTS">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Text>
+                                    <Label fx:id="paymentsLabel" style="-fx-text-fill: linear-gradient(to right, #0288d1, #4fc3f7); -fx-font-size: 36;" text="0" />
+                                 </children>
+                              </VBox>
+      
+                                          <!-- Third stat card -->
+                              <VBox prefHeight="126.0" prefWidth="250.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                 <effect>
+                                    <DropShadow color="#00000022" height="10.0" radius="4.5" width="10.0" />
+                                 </effect>
+                                 <children>
+                                    <Text fill="#424242" text="COACHES">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </Text>
+                                    <Label fx:id="coachesLabel" style="-fx-text-fill: linear-gradient(to right, #0288d1, #4fc3f7); -fx-font-size: 36;" text="0" />
+                                 </children>
+                              </VBox>
                            </children>
+                           <rowConstraints>
+                              <RowConstraints />
+                           </rowConstraints>
                         </GridPane>
+      
+                                    <!-- Line chart panel -->
+                        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;">
+                           <effect>
+                              <DropShadow color="#00000022" height="10.0" radius="4.5" width="10.0" />
+                           </effect>
+                           <children>
+                              <Text fill="#424242" text="Monthly Profit Trend">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Text>
+                              <LineChart fx:id="profitChart" legendVisible="false" prefHeight="320.0" prefWidth="897.0" style="-fx-background-color: transparent;">
+                                 <xAxis>
+                                    <CategoryAxis label="Month" />
+                                 </xAxis>
+                                 <yAxis>
+                                    <NumberAxis label="Profit ($)" />
+                                 </yAxis>
+                              </LineChart>
+                           </children>
+                        </VBox>
+      
+                                    <!-- Schedule table panel -->
+                        <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15;">
+                           <effect>
+                              <DropShadow color="#00000022" height="10.0" radius="4.5" width="10.0" />
+                           </effect>
+                           <children>
+                              <Text fill="#424242" text="Today's Coaching Schedule">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Text>
+                              <TableView fx:id="scheduleTable" prefHeight="180.0" prefWidth="897.0" style="-fx-background-color: white; -fx-border-color: transparent;">
+                                 <columns>
+                                    <TableColumn fx:id="coachNameColumn" prefWidth="200.0" text="Coach Name" />
+                                    <TableColumn fx:id="classTypeColumn" prefWidth="200.0" text="Class Type" />
+                                    <TableColumn fx:id="timeColumn" prefWidth="150.0" text="Time" />
+                                    <TableColumn fx:id="isPrivateColumn" prefWidth="150.0" text="Private Session" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </VBox>
                      </children>
                   </VBox>
-                  <Button fx:id="settingsButton" layoutX="115.0" layoutY="680.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="63.0" text="Settings" />
-                  <Circle fx:id="userAvatarCircle" fill="#89b9e7" layoutX="147.0" layoutY="136.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-               </children>
-            </AnchorPane>
-         </left>
-      </BorderPane>
+               </center>
+            </BorderPane>
+         </children>
+      </StackPane>
    </children>
-</StackPane>
+</Pane>

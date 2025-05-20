@@ -1,0 +1,89 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom, #eceff1, #ffffff);
+}
+
+.form-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #455a64;
+}
+
+.text-field, .combo-box {
+    -fx-background-color: #fafafa;
+    -fx-border-color: #b0bec5;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #212121;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #0288d1;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #0288d1;
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+.table-view .column-header {
+    -fx-background-color: linear-gradient(to bottom, #0288d1, #039be5);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-view .table-cell {
+    -fx-alignment: center;
+    -fx-text-fill: #37474f;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f5f5f5;
+}
+
+.table-row-cell:even {
+    -fx-background-color: white;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #e3f2fd;
+}
+
+.save-button {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.save-button:hover {
+    -fx-background-color: #43a047;
+}
+
+.clear-button {
+    -fx-background-color: #ef5350;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.clear-button:hover {
+    -fx-background-color: #e53935;
+}

@@ -55,7 +55,22 @@ public class AdminDAO {
         }
     }
 
+    public static boolean emailExists(String email) throws SQLException {
+        String query = "SELECT COUNT(*) FROM admin WHERE email = ?";
 
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+                return false;
+            }
+        }
+    }
     public static boolean createAdmin(String username, String password) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -96,6 +111,22 @@ public class AdminDAO {
             }
         }
     }
+    public static boolean usernameExists(String username) throws SQLException {
+        String query = "SELECT COUNT(*) FROM admin WHERE username = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, username);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+                return false;
+            }
+        }
+    }
     private static void updateLastLogin(String username, Connection conn) {
         PreparedStatement stmt = null;
 
@@ -126,6 +157,21 @@ public class AdminDAO {
             return 0;
         }
     }
+    public static boolean registerAdmin(String fullName, String email, String username, String password) throws SQLException {
+        String query = "INSERT INTO admin (fullname, email, username, password) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, fullName);
+            stmt.setString(2, email);
+            stmt.setString(3, username);
+            stmt.setString(4, password); // In production, use password hashing
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        }
+    }
 
     // Get total payments
     public static double getTotalPayments() {
@@ -142,7 +188,7 @@ public class AdminDAO {
 
     // Get coach count
     public static int getCoachesCount() {
-        String query = "SELECT COUNT(*) FROM coaches";
+        String query = "SELECT COUNT(*) FROM coach";
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();

@@ -1,3 +1,4 @@
+// Updated LoginController with logout functionality for the nav page
 package controller;
 
 import Db.Database;
@@ -25,6 +26,7 @@ public class LoginController implements Initializable {
     @FXML private TextField username;
     @FXML private TextField password;
     @FXML private Button loginbtn;
+    @FXML private Button signupbtn;
 
     private StringBuilder actualPassword = new StringBuilder();
     private Connection connection;
@@ -33,6 +35,7 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setupPasswordField();
         loginbtn.setOnAction(this::handleLogin);
+        signupbtn.setOnAction(this::handleSignUp);
 
         // Initialize database connection
         initializeDatabaseConnection();
@@ -59,12 +62,37 @@ public class LoginController implements Initializable {
         }).start();
     }
 
+    private void handleSignUp(ActionEvent event) {
+        try {
+            // Load the signup FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/SignUp.fxml"));
+            Parent signupRoot = loader.load();
+
+            // Get the SignupController and set the connection
+            SignupController signupController = loader.getController();
+            signupController.setConnection(this.connection);
+
+            // Create a new stage for signup
+            Stage signupStage = new Stage();
+            Scene scene = new Scene(signupRoot);
+
+            signupStage.setScene(scene);
+            signupStage.setTitle("Créer un compte");
+            signupStage.setResizable(false);
+            signupStage.show();
+
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Load Error", "Failed to load signup page: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private void handleLogin(ActionEvent event) {
         String usernameText = username.getText();
         String passwordText = actualPassword.toString();
 
         if (usernameText.isEmpty() || passwordText.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Input Error", "Please enter both username and password");
+            showAlert(Alert.AlertType.WARNING, "Input Error", "Veuillez entrer votre nom d'utilisateur et mot de passe");
             shakeFields();
             return;
         }
@@ -77,37 +105,44 @@ public class LoginController implements Initializable {
                 }
 
                 if (AdminDAO.authenticateAdmin(usernameText, passwordText)) {
-                    Platform.runLater(() -> loadDashboard());
+                    Platform.runLater(() -> loadNavPage());
                 } else {
                     Platform.runLater(() -> {
-                        showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid credentials");
+                        showAlert(Alert.AlertType.ERROR, "Login Failed", "Identifiants invalides");
                         shakeFields();
                     });
                 }
             } catch (Exception e) {
                 Platform.runLater(() -> {
                     showAlert(Alert.AlertType.ERROR, "Login Error",
-                            "Error during authentication: " + e.getMessage());
+                            "Erreur d'authentification: " + e.getMessage());
                     e.printStackTrace();
                 });
             }
         }).start();
     }
 
-    private void loadDashboard() {
+    private void loadNavPage() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/dashboardadmin.fxml"));
-            Parent dashboardRoot = loader.load();
+            // Load the NavPage FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/navPage.fxml"));
+            Parent navPageRoot = loader.load();
 
-            // Get the controller and pass the connection
-            DashboardController dashboardController = loader.getController();
-            dashboardController.setConnection(this.connection);
+            // Get the NavController and set the connection
+            NavController navController = loader.getController();
+            navController.setConnection(this.connection);
+            navController.setLoginData(username.getText()); // Pass the username for display
 
             // Get current stage and switch scene
             Stage currentStage = (Stage) main.getScene().getWindow();
-            currentStage.setScene(new Scene(dashboardRoot));
+            Scene scene = new Scene(navPageRoot);
 
-            // Set close handler
+            currentStage.setScene(scene);
+            currentStage.setWidth(1600);  // Set an appropriate width
+            currentStage.setHeight(900);  // Set an appropriate height
+            currentStage.centerOnScreen(); // Center the stage
+
+            // Set close handler to properly close the database connection
             currentStage.setOnCloseRequest(e -> {
                 try {
                     if (connection != null && !connection.isClosed()) {
@@ -119,23 +154,23 @@ public class LoginController implements Initializable {
             });
 
         } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Load Error", "Failed to load dashboard: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Load Error", "Failed to load navigation page: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     private void shakeFields() {
         // Simple visual feedback - you can implement a more sophisticated animation
-        username.setStyle("-fx-border-color: red;");
-        password.setStyle("-fx-border-color: red;");
+        username.setStyle("-fx-border-color: #e57373;");
+        password.setStyle("-fx-border-color: #e57373;");
 
         // Reset styles after a delay
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
                 Platform.runLater(() -> {
-                    username.setStyle("");
-                    password.setStyle("");
+                    username.setStyle("-fx-background-color: transparent; -fx-border-color: #e0e0e0; -fx-border-width: 0px 0px 1px 0px;");
+                    password.setStyle("-fx-background-color: transparent; -fx-border-color: #e0e0e0; -fx-border-width: 0px 0px 1px 0px;");
                 });
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -149,6 +184,12 @@ public class LoginController implements Initializable {
             alert.setTitle(title);
             alert.setHeaderText(null);
             alert.setContentText(message);
+
+            // Style the alert dialog
+            DialogPane dialogPane = alert.getDialogPane();
+            dialogPane.getStylesheets().add(getClass().getResource("/views/logindesign.css").toExternalForm());
+            dialogPane.getStyleClass().add("modern-dialog");
+
             alert.showAndWait();
         });
     }
