@@ -78,14 +78,14 @@ public class NavController implements Initializable {
     private void loadDashboard() {
         loadPage("/views/dashboardadmin.fxml");
         setActiveButton(dashboardButton);
-        headerTitle.setText("Tableau de Bord");
+        headerTitle.setText("Dashboard");
     }
 
     @FXML
     private void loadCoaches() {
         loadPage("/views/coaches.fxml");
         setActiveButton(coachesButton);
-        headerTitle.setText("Entraineurs");
+        headerTitle.setText("Coaches");
     }
 
     @FXML
@@ -99,7 +99,7 @@ public class NavController implements Initializable {
     private void loadPayment() {
         loadPage("/views/payement.fxml");
         setActiveButton(paymentButton);
-        headerTitle.setText("Paiement");
+        headerTitle.setText("Payment");
     }
 
     @FXML

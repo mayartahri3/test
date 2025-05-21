@@ -30,7 +30,7 @@
                               <Font name="System Bold" size="26.0" />
                            </font>
                         </Text>
-                        <Text fill="WHITE" text="Système de gestion pour votre salle de sport" textAlignment="CENTER" wrappingWidth="250.0">
+                        <Text fill="WHITE" text="Management system for your gym" textAlignment="CENTER" wrappingWidth="250.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -48,29 +48,29 @@
                <children>
                   <VBox alignment="CENTER" layoutX="50.0" layoutY="100.0" prefHeight="300.0" prefWidth="300.0" spacing="25.0">
                      <children>
-                        <Label text="Bienvenue" textAlignment="CENTER" textFill="#0288d1">
+                        <Label text="Welcome" textAlignment="CENTER" textFill="#0288d1">
                            <font>
                               <Font name="System Bold" size="28.0" />
                            </font>
                         </Label>
 
-                        <Text fill="#757575" text="Connectez-vous pour accéder à votre compte" textAlignment="CENTER" wrappingWidth="250.0">
+                        <Text fill="#757575" text="Log in to access your account" textAlignment="CENTER" wrappingWidth="250.0">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Text>
 
-                        <TextField fx:id="username" prefHeight="40.0" prefWidth="300.0" promptText="Nom d'utilisateur" styleClass="textfield" stylesheets="@logindesign.css" />
+                        <TextField fx:id="username" prefHeight="40.0" prefWidth="300.0" promptText="Name" styleClass="textfield" stylesheets="@logindesign.css" />
 
-                        <TextField fx:id="password" prefHeight="40.0" prefWidth="300.0" promptText="Mot de passe" styleClass="textfield" stylesheets="@logindesign.css" />
+                        <TextField fx:id="password" prefHeight="40.0" prefWidth="300.0" promptText="Password" styleClass="textfield" stylesheets="@logindesign.css" />
 
-                        <Button fx:id="loginbtn" prefHeight="40.0" prefWidth="300.0" styleClass="login-btn" stylesheets="@logindesign.css" text="CONNEXION" />
+                        <Button fx:id="loginbtn" prefHeight="40.0" prefWidth="300.0" styleClass="login-btn" stylesheets="@logindesign.css" text="login" />
 
                         <Separator prefWidth="300.0" styleClass="separator" />
 
-                        <Label text="Vous n'avez pas de compte?" textFill="#757575" />
+                        <Label text="Don't have an account?" textFill="#757575" />
 
-                        <Button fx:id="signupbtn" prefHeight="31.0" prefWidth="238.0" styleClass="signup-btn" stylesheets="@logindesign.css" text="CRÉER UN COMPTE" />
+                        <Button fx:id="signupbtn" layoutY="10.0" prefHeight="31.0" prefWidth="238.0" styleClass="signup-btn" stylesheets="@logindesign.css" text="Create an account" />
                      </children>
                   </VBox>
                </children>
